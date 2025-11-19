@@ -1,196 +1,308 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signUp } from '../../services/user.services';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { signUp } from "../../services/user.services";
 
-const Ingresar = ({ setIsLoggedIn }) => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        fullName: '',
-        userName: '',
-        gender: '',
-        dateBirth: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        height: '',
+const Ingresar = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    userName: "",
+    gender: "",
+    dateBirth: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    height: "",
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    fullName: "",
+    userName: "",
+    gender: "",
+    dateBirth: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    height: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validación básica en front
+    const errors = {};
+    Object.keys(formData).forEach((key) => {
+      if (String(formData[key]).trim() === "") {
+        errors[key] = "Este campo es obligatorio";
+      }
     });
 
-    const [formErrors, setFormErrors] = useState({
-        fullName: '',
-        userName: '',
-        gender: '',
-        dateBirth: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        height: '',
-    });
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Las contraseñas no coinciden";
+    }
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+    setFormErrors(errors);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // Si hay errores NO llamamos a la API
+    if (Object.keys(errors).length > 0) return;
 
-        // Validación de campos
-        const errors = {};
-        Object.keys(formData).forEach((key) => {
-            if (formData[key].trim() === '') {
-                errors[key] = 'Este campo es obligatorio';
-            }
-        });
+    try {
+      const response = await signUp(formData); // axios.post(...)
+      console.log("Respuesta registro:", response);
 
-        if (formData.password !== formData.confirmPassword) {
-            errors.confirmPassword = 'Las contraseñas no coinciden';
-        }
-        setFormErrors(errors);
+      // Si la API responde 2xx, axios entra al try y tenemos response
+      // (tu API devuelve el token como string en response.data)
+      console.log("Usuario creado:", response.data);
 
-        if (Object.keys(errors).length === 0) {
-            // enviar a una API
-            setFormData({
-                fullName: '',
-                userName: '',
-                gender: '',
-                dateBirth: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                height: '',
-            });
+      // Limpiar formulario
+      setFormData({
+        fullName: "",
+        userName: "",
+        gender: "",
+        dateBirth: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        height: "",
+      });
 
-            const { data } = await signUp(formData);
-            console.log(data);
-            if (data) {
-                setIsLoggedIn(true);
-                sessionStorage.setItem('toke', data);
-                navigate('/')
-            }
-        }
-    };
+      // Después de registrarse, lo más lógico es mandarlo al login
+      navigate("/Login");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error del backend:",
+          error.response?.status,
+          error.response?.data
+        );
+        // Aquí podrías mostrar un mensaje bonito si quieres
+        // por ejemplo, si es 409:
+        // if (error.response?.status === 409) alert("Ya existe un usuario con ese correo o nombre de usuario");
+      } else {
+        console.error("Error al registrar usuario:", error);
+      }
+    }
+  };
 
-    return (
-        <div className='p-2 flex flex-col w-full min-h-screen items-center justify-center bg-fondocolor'>
-            <div className='bg-fondocolor3 rounded-3xl px-4 py-6 shadow-xl w-full md:w-2/3 lg:w-3/4 xl:w-1/2 flex flex-col justify-center items-center'>
-                <h1 className='text-2xl md:text-4xl font-font font-semibold text-letracolor1 mb-2 text-c'>Bienvenido a <span className='text-letracolor2'>Health Care</span></h1>
-                <p className='font-font text-base text-letracolor1 mt-1 text-center mb-2'>Crea una nueva cuenta</p>
-                <form onSubmit={handleSubmit} className='w-full'>
-                    <div className='flex flex-col md:flex-row w-full'>
-                        <div className='flex flex-col w-full md:w-1/2 md:mx-4 '>
-                            <label className='text-lg text-letracolor1 font-font'>Nombre completo</label>
-                            <input
-                                name='fullName'
-                                value={formData.fullName}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Ingresa tu nombre completo'
-                                required
-                            />
-                            <label className='text-lg text-letracolor1 font-font'>Nombre de usuario</label>
-                            <input
-                                name='userName'
-                                value={formData.userName}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Ingresa tu nombre de usuario'
-                                required
-                            />
-                            <label className='text-lg text-letracolor1 font-font'>Genero</label>
-                            <select
-                                name='gender'
-                                value={formData.gender}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                required
-                            >
-                                <option className='bg-fondocolor3' value="1">Femenino</option>
-                                <option className='bg-fondocolor3' value="2">Masculino</option>
-                            </select>
-                            <label className='text-lg text-letracolor1 font-font mb-1'>Fecha de Nacimiento</label>
-                            <input
-                                type="date"
-                                name='dateBirth'
-                                value={formData.dateBirth}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Ingresa tu fecha de naciemiento'
-                                required
-                            />
-                        </div>
-                        <div className='flex flex-col w-full md:w-1/2 md:mx-4'>
-                            <label className='text-lg text-letracolor1 font-font'>Correo Electronico</label>
-                            <input
-                                name='email'
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Ingresa tu correo electronico'
-                                required
-                            />
-                            {formErrors.email && (
-                                <p className='text-red-500 text-sm'>{formErrors.email}</p>
-                            )}
-                            <label className='text-lg text-letracolor1 font-font'>Contraseña</label>
-                            <input
-                                name='password'
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Ingresa una contraseña'
-                                type='password'
-                                required
-                            />
-                            {formErrors.password && (
-                                <p className='text-red-500 text-sm'>{formErrors.password}</p>
-                            )}
+  return (
+    <div className="p-2 flex flex-col w-full min-h-screen items-center justify-center bg-fondocolor">
+      <div className="bg-fondocolor3 rounded-3xl px-4 py-6 md:px-10 md:py-8 lg:px-16 lg:py-10  w-full md:w-2/3 lg:w-3/4 xl:w-1/2 flex flex-col justify-center items-center">
+        <h1 className="text-2xl md:text-4xl font-font font-semibold text-letracolor1 text-center">
+          Bienvenido a <span className="text-letracolor2">Health Care</span>
+        </h1>
+        <p className="font-font text-base text-letracolor1 mt-1 text-center mb-2">
+          Crea una nueva cuenta
+        </p>
 
-                            <label className='text-lg text-letracolor1 font-font'>Confirmar Contraseña</label>
-                            <input
-                                name='confirmPassword'
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                type='password'
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Confirmar'
-                                required
-                            />
-                            {formErrors.confirmPassword && (
-                                <p className='text-red-500 text-sm'>{formErrors.confirmPassword}</p>
-                            )}
-                            <label className='text-lg text-letracolor1 font-font'>Altura</label>
-                            <input
-                                name='height'
-                                value={formData.height}
-                                onChange={handleInputChange}
-                                className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent text-letracolor1 my-2'
-                                placeholder='Ingresa tu altura en metros'
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div className='mt-6 flex flex-col gap-y-4 w-full justify-center items-center'>
-                        <button
-                            className='active:scale-[.98] active:duration-75 hover:scale-[1.15] ease-in-out transition-all py-3 rounded-xl bg-fondocolor2 text-letracolor3 text-lg font-bold w-full md:w-4/6'
-                            type="submit"
-                        >
-                            Enviar
-                        </button>
-                    </div>
-                </form>
-
-                <div className='mt-8 flex justify-center items-center'>
-                    <p className='font-font text-base text-letracolor1'>¿Ya tienes una cuenta?</p>
-                    <Link to='/Login'>
-                        <button className='text-letracolor2 text-base font-font ml-2 hover:underline'>Inicia sesion</button>
-                    </Link>
-                </div>
+        <form className="w-full" onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Nombre completo
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.fullName ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+                placeholder="Ingresa tu nombre completo"
+              />
+              {formErrors.fullName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.fullName}
+                </p>
+              )}
             </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Correo Electronico
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.email ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+                placeholder="Ingresa tu correo electronico"
+              />
+              {formErrors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.email}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Nombre de usuario
+              </label>
+              <input
+                type="text"
+                name="userName"
+                value={formData.userName}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.userName ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+                placeholder="Ingresa tu nombre de usuario"
+              />
+              {formErrors.userName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.userName}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.password ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+                placeholder="Ingresa una contraseña"
+              />
+              {formErrors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.password}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Genero
+              </label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.gender ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+              >
+                <option value="">Selecciona tu genero</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Otro">Otro</option>
+              </select>
+              {formErrors.gender && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.gender}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Confirmar Contraseña
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.confirmPassword
+                    ? "border-red-500"
+                    : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+                placeholder="Confirmar"
+              />
+              {formErrors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.confirmPassword}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Fecha de Nacimiento
+              </label>
+              <input
+                type="date"
+                name="dateBirth"
+                value={formData.dateBirth}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.dateBirth ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+              />
+              {formErrors.dateBirth && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.dateBirth}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-letracolor1 font-font mb-2">
+                Altura
+              </label>
+              <input
+                type="number"
+                name="height"
+                value={formData.height}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
+                  formErrors.height ? "border-red-500" : "border-transparent"
+                } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
+                placeholder="Ingresa tu altura en metros"
+                step="0.01"
+              />
+              {formErrors.height && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.height}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <button
+              type="submit"
+              className="w-full md:w-1/2 bg-letracolor2 text-white font-font py-3 rounded-full hover:bg-blue-600 transition-all duration-300"
+            >
+              Enviar
+            </button>
+          </div>
+        </form>
+
+        <div className="mt-8 flex justify-center items-center">
+          <p className="font-font text-base text-letracolor1">
+            ¿Ya tienes una cuenta?
+          </p>
+          <Link to="/Login">
+            <button className="text-letracolor2 text-base font-font ml-2 hover:underline">
+              Inicia sesion
+            </button>
+          </Link>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 
 export default Ingresar;

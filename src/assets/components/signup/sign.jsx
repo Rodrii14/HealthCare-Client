@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { signUp } from "../../services/user.services";
+import { signUp } from "../../services/user.services"; 
+
 
 const Ingresar = () => {
   const navigate = useNavigate();
@@ -52,16 +53,10 @@ const Ingresar = () => {
     }
 
     setFormErrors(errors);
-
-    // Si hay errores NO llamamos a la API
     if (Object.keys(errors).length > 0) return;
 
     try {
-      const response = await signUp(formData); // axios.post(...)
-      console.log("Respuesta registro:", response);
-
-      // Si la API responde 2xx, axios entra al try y tenemos response
-      // (tu API devuelve el token como string en response.data)
+      const response = await signUp(formData);
       console.log("Usuario creado:", response.data);
 
       // Limpiar formulario
@@ -76,8 +71,7 @@ const Ingresar = () => {
         height: "",
       });
 
-      // Después de registrarse, lo más lógico es mandarlo al login
-      navigate("/Login");
+      navigate("/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
@@ -85,9 +79,6 @@ const Ingresar = () => {
           error.response?.status,
           error.response?.data
         );
-        // Aquí podrías mostrar un mensaje bonito si quieres
-        // por ejemplo, si es 409:
-        // if (error.response?.status === 409) alert("Ya existe un usuario con ese correo o nombre de usuario");
       } else {
         console.error("Error al registrar usuario:", error);
       }
@@ -96,6 +87,16 @@ const Ingresar = () => {
 
   return (
     <div className="p-2 flex flex-col w-full min-h-screen items-center justify-center bg-fondocolor">
+      {/* 🔙 BOTÓN DE VOLVER AL INICIO */}
+      <div className="w-full md:w-2/3 lg:w-3/4 xl:w-1/2 mb-4">
+        <Link
+          to="/"
+          className="text-letracolor2 font-font hover:underline px-2"
+        >
+          ← Volver al inicio
+        </Link>
+      </div>
+
       <div className="bg-fondocolor3 rounded-3xl px-4 py-6 md:px-10 md:py-8 lg:px-16 lg:py-10  w-full md:w-2/3 lg:w-3/4 xl:w-1/2 flex flex-col justify-center items-center">
         <h1 className="text-2xl md:text-4xl font-font font-semibold text-letracolor1 text-center">
           Bienvenido a <span className="text-letracolor2">Health Care</span>
@@ -104,8 +105,12 @@ const Ingresar = () => {
           Crea una nueva cuenta
         </p>
 
+        {/* FORMULARIO */}
         <form className="w-full" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* ====== CAMPOS ====== */}
+
             <div>
               <label className="block text-letracolor1 font-font mb-2">
                 Nombre completo
@@ -129,7 +134,7 @@ const Ingresar = () => {
 
             <div>
               <label className="block text-letracolor1 font-font mb-2">
-                Correo Electronico
+                Correo Electrónico
               </label>
               <input
                 type="email"
@@ -139,7 +144,7 @@ const Ingresar = () => {
                 className={`w-full px-4 py-2 rounded-xl bg-fondocolor2 text-letracolor1 border ${
                   formErrors.email ? "border-red-500" : "border-transparent"
                 } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
-                placeholder="Ingresa tu correo electronico"
+                placeholder="Ingresa tu correo electrónico"
               />
               {formErrors.email && (
                 <p className="text-red-500 text-sm mt-1">
@@ -192,7 +197,7 @@ const Ingresar = () => {
 
             <div>
               <label className="block text-letracolor1 font-font mb-2">
-                Genero
+                Género
               </label>
               <select
                 name="gender"
@@ -202,7 +207,7 @@ const Ingresar = () => {
                   formErrors.gender ? "border-red-500" : "border-transparent"
                 } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
               >
-                <option value="">Selecciona tu genero</option>
+                <option value="">Selecciona tu género</option>
                 <option value="Femenino">Femenino</option>
                 <option value="Masculino">Masculino</option>
                 <option value="Otro">Otro</option>
@@ -228,7 +233,7 @@ const Ingresar = () => {
                     ? "border-red-500"
                     : "border-transparent"
                 } focus:outline-none focus:ring-2 focus:ring-letracolor2`}
-                placeholder="Confirmar"
+                placeholder="Confirmar contraseña"
               />
               {formErrors.confirmPassword && (
                 <p className="text-red-500 text-sm mt-1">
@@ -278,6 +283,7 @@ const Ingresar = () => {
                 </p>
               )}
             </div>
+
           </div>
 
           <div className="mt-8 flex justify-center">
@@ -296,7 +302,7 @@ const Ingresar = () => {
           </p>
           <Link to="/Login">
             <button className="text-letracolor2 text-base font-font ml-2 hover:underline">
-              Inicia sesion
+              Inicia sesión
             </button>
           </Link>
         </div>

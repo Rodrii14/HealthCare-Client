@@ -39,3 +39,12 @@ export const getDateData = async (token, endpoint) => {
         console.error(error);
     }
 }
+
+export const getAllData = async (token, endpoint) => {
+    try {
+        const { data } = await axios.get(`${URL}/HC/${endpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}

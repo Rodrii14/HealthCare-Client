@@ -48,3 +48,12 @@ export const getAllData = async (token, endpoint) => {
         console.error(error);
     }
 }
+
+export const deleteData = async (token, endpoint, id) => {
+    try {
+        const message = await axios.delete(`${URL}/HC/${endpoint}/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        return message;
+    } catch (error) {
+        console.error(error);
+    }
+}

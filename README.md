@@ -1,6 +1,6 @@
 # 🩺 Health Care – Aplicación de Registro y Seguimiento de Salud
 
-Health Care es una aplicación web diseñada para *registrar y gestionar métricas de salud, llevar un **seguimiento del progreso, y ofrecer **recursos informativos* sobre hábitos saludables, alimentación y ejercicio (tipo blog).
+Health Care es una aplicación web diseñada para **registrar y gestionar métricas de salud**, llevar un **seguimiento del progreso**, y ofrecer **recursos informativos** sobre hábitos saludables, alimentación y ejercicio (tipo blog).
 
 La aplicación permite:
 

@@ -1,98 +1,192 @@
-# Health Care
+# 🩺 Health Care – Aplicación de Registro y Seguimiento de Salud
 
-## Sec 01 - Grupo N° 07
+Health Care es una aplicación web diseñada para *registrar y gestionar métricas de salud, llevar un **seguimiento del progreso, y ofrecer **recursos informativos* sobre hábitos saludables, alimentación y ejercicio (tipo blog).
 
-### Integrantes
+La aplicación permite:
 
-| Nombre        | Carnet        |
-| ------------- | ------------- |
-|      Miguel Andreé Torres Campos       |      00015722          |
-|      David Ernesto Mejía Oliva         |      00004722          |
-|      Rodrigo Umanzor Velásquez         |      00087022          |
+- Registrar métricas como:
+  - Peso
+  - Grasa corporal
+  - Colesterol
+  - Masa muscular
+  - Presión arterial
+  - Glucosa
+- Consultar el *historial de registros*.
+- Eliminar registros anteriores.
+- Visualizar información y recursos para mejorar la salud.
+
+---
+
+## ✅ Requisitos previos
+
+Antes de instalar y ejecutar la aplicación, es necesario contar con:
+
+- *Node.js: versión **18.x o superior*  
+- *npm* (incluido con Node) y/o *yarn* (opcional).
+- *Navegador moderno* (Chrome, Edge, Firefox, etc.).
+- Opcional pero recomendado:
+  - *Editor de código* (VS Code, WebStorm, etc.)
+  - *Git* para clonar el repositorio.
+
+---
+
+## 📦 Dependencias
+
+Las dependencias del proyecto se gestionan a través de package.json.
+
+### Dependencias principales (dependencies)
+
+- *React y ecosistema*
+  - react ^18.2.0  
+  - react-dom ^18.2.0  
+  - react-router-dom ^6.20.0  
+
+- *Manejo de formularios*
+  - react-hook-form ^7.48.2  
+
+- *HTTP / API*
+  - axios ^1.6.1  
+
+- *Gráficas*
+  - chart.js ^4.4.0  
+  - react-chartjs-2 ^5.2.0  
+
+- *Estilos*
+  - tailwindcss ^3.3.5  
+  - postcss ^8.4.31  
+  - autoprefixer ^10.4.16  
+
+- *Multimedia y componentes visuales*
+  - react-icons ^4.11.0  
+  - react-youtube ^10.1.0  
+  - video-react ^0.16.0  
+
+- *Variables de entorno*
+  - dotenv ^16.3.1  
+
+### Dependencias de desarrollo (devDependencies)
+
+- *Herramientas de build y desarrollo*
+  - vite ^4.4.5  
+  - @vitejs/plugin-react ^4.0.3  
+
+- *Tipado (soporte de types)*
+  - @types/react ^18.2.15  
+  - @types/react-dom ^18.2.7  
+
+- *Linting / calidad de código*
+  - eslint ^8.45.0  
+  - eslint-plugin-react ^7.32.2  
+  - eslint-plugin-react-hooks ^4.6.0  
+  - eslint-plugin-react-refresh ^0.4.3  
+
+- *Iconos adicionales*
+  - @iconify/react ^4.1.1  
+
+---
+
+## 🛠️ Instalación y configuración
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/Rodrii14/HealthCare-Client
+cd HealthCare-Client
+```
+
+2. Instalar dependencias
+
+Puedes usar npm o yarn.
+
+Opción A: usando npm (recomendado)
+```bash
+npm install
+```
+
+Opción B: usando yarn
+
+Si aún no tienes yarn instalado:
+```bash
+npm install --global yarn
+```
+
+Luego, dentro del proyecto:
+```bash
+yarn install
+```
+
+3. Configuración de Tailwind CSS
+
+Si el proyecto no cuenta con los archivos de configuración de Tailwind, se pueden crear con:
+
+Con npm:
+```bash
+npx tailwindcss init -p
+```
+
+O con yarn:
+
+```bash
+yarn tailwindcss init -p
+```
+
+Este comando generará:
+```
+tailwind.config.js
+
+postcss.config.js
+```
+
+En tu archivo CSS principal (por ejemplo src/index.css o src/main.css), deben estar incluidas las directivas:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+🌐 Variables de entorno
+
+La aplicación está basada en Vite, por lo que las variables de entorno deben comenzar con el prefijo VITE_.
+
+En la raíz del proyecto, crear un archivo llamado .env (si aún no existe).
+
+Agregar la siguiente variable:
+```env
+VITE_BASEURL=http://localhost:3500
+```
 
 
+Esta variable define la URL base de la API/backend.
 
-## Test Users
-username:rodrigo.umanzor
-passsword:123456789Aa*
+Por defecto, está configurada para apuntar a un servidor local que corre en el puerto 3500.
 
-## Pre-requisitos 📋
-
-Requisitos:
-- Frameworks: Visual Studio Code, MongoDB
-- Lenguajes: HTML, CSS, JS
-- Librerías: [React], [Express], [Tailwind]
-- Gestor de paquetes: [Yarn]
-
-## Instalación 🔧
-
-1. Clona el repositorio con el comando `git clone https://github.com/usuario/proyecto.git` en la terminal de tu elección.
-2. Ejecuta el comando `yarn` en la terminal para instalar las dependencias necesarias.
-3. Inicializa Tailwind con el comando `yarn tailwindcss init -p`.
-
-## Ejecutar las pruebas ⚙️
-
-Para ejecutar las pruebas, utiliza el comando `yarn dev` en la terminal. Este comando iniciará el servidor de desarrollo y te permitirá ver los cambios en tiempo real mientras trabajas en el proyecto.
-
-## Despliegue 📦
-
-Para desplegar el proyecto, utiliza:
-- FrontEnd: [Vercel]
-- BackEnd: [Cyclic]
-
-# Manual del Usuario de HealthCare
-
-## Índice
-1. [Introducción](#introducción)
-2. [Cómo se utiliza la web](#cómo-se-utiliza-la-web😎)
-3. [Preguntas Frecuentes](#preguntas-frecuentes❓)
-
-## Introducción
-
-¡Gracias por elegir HealthCare! Este manual te guiará a través de la instalación y el uso de HealthCare, proporcionando un seguimiento visual de diferentes factores del usuario y sus cambios en esta nueva vida saludable que deseas empezar.
-
-## Cómo se utiliza la web😎
-
-1. Se debe iniciar o crear una sesión para poder utilizar nuestras funciones, ya que el enfoque de la página es llevar el progreso que tendrá el usuario.
-2. En la sección 'Salud', serás redirigido al área de inserción de datos.
-3. En el apartado de "Inserción de datos", se presentan unas "cards" con un título; debes llenarlas con los datos correspondientes.
-
-Además, en esa sección encontrarás las gráficas, las cuales se mostrarán con respecto a los datos que ha ingresado el usuario.
-
-#### Nota:
-Solo se puede añadir un registro por día, ya que se busca un progreso diario.
-
-4. En la sección 'Ejercicios', serás redirigido a un reproductor en el cual podrás observar diferentes rutinas de ejercicios recomendadas por nosotros y reproducirlas en la misma página.
-
-5. Para ponerte en contacto con nuestro equipo, puedes hacerlo desde nuestra homepage o desde nuestra barra lateral, la cual te permite acceder a nuestro formulario de contacto.
+Ejemplo para entorno de producción:
+```env
+VITE_BASEURL=https://api.mihealthcare.com
+```
 
 
+Después de modificar o agregar variables en el .env, se recomienda reiniciar el servidor de desarrollo.
 
-## Preguntas Frecuentes❓
+🚀 Ejecución de la aplicación
 
-**Pregunta:** ¿Por qué mi gráfica solo muestra un registro cuando ingreso mis datos?
-**Respuesta:** Esto depende de varios factores. Si es tu primera vez en nuestra página, es normal que te aparezca un solo registro, ya que es tu primer "Checkpoint o registro". Además, recuerda que solo puedes registrar un dato por día. Como otro punto, depende de la cantidad de registros que tengas, ya que necesitas tener un seguimiento para que la precisión de la gráfica sea eficiente.
+Una vez instaladas las dependencias y configuradas las variables de entorno, puedes ejecutar la aplicación en modo desarrollo.
 
-**Pregunta:** ¿Qué indican los segmentos de las barras de mi tarjeta de registro?
-**Respuesta:** Estos son los indicadores del rango en el que puedes estar. En el primer segmento se encuentra "Valor mínimo", el cual indica el valor mínimo saludable que puedes tener. El segundo segmento es el valor adecuado, y el tercero indica un "Valor máximo" que puedes interpretar como el exceso de ese factor.
+Con npm:
+```bash
+npm run dev
+```
 
-## Links of interest
--->https://www.cdc.gov/healthyweight/spanish/assessing/bmi/adult_bmi/metric_bmi_calculator/bmi_calculator.html
 
--->(https://tailwindcss.com/)
+Con yarn:
+```bash
+yarn dev
+```
 
--->https://medlineplus.gov/spanish/ency/article/002393.htm#:~:text=Los%20buenos%20h%C3%A1bitos%20de%20salud,regular%20y%20controlar%20el%20peso.
+Vite levantará un servidor local, normalmente en:
+```bash
+http://localhost:5173/
+```
 
--->https://www.policlinicorisso.com/blog/la-importancia-de-una-buena-salud
-
--->https://www.cdc.gov/physicalactivity/basics/spanish/los-beneficios-de-la-actividad-fisica.htm#:~:text=Hacer%20actividad%20f%C3%ADsica%20regularmente%20puede,que%20ayudarte%20a%20dormir%20mejor.
-
--->(https://www.cyclic.sh/)
-
--->(https://vercel.com/)
-
--->(https://expressjs.com/)
-
--->(https://reactjs.org/)
-
--->(https://yarnpkg.com/)
+Abre esa URL en tu navegador para utilizar la aplicación Health Care.

@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { getAllData } from "./../../assets/services/stats.services";
+import { useEffect, useState } from "react";
+import { getAllData, deleteData } from "./../../assets/services/stats.services";
 
 export default function MetricsPage() {
   const [metrics, setMetrics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [endpoint, setEndpoint] = useState("");
+
+  const handleDelete = async (id) => {
+    const token = sessionStorage.getItem("toke");
+    await deleteData(token, endpoint, id);
+    fetchMetrics();
+  };
 
   const fetchMetrics = async () => {
     if (!endpoint) return;
@@ -66,6 +72,7 @@ export default function MetricsPage() {
                   <th className="p-3 text-center">Medida</th>
                 )}
                 <th className="p-3 text-center">Fecha de Registro</th>
+                <th className="p-3 text-center">Acción</th>
               </tr>
             </thead>
             <tbody>
@@ -80,6 +87,14 @@ export default function MetricsPage() {
                     <td className="p-3 text-center">{m.values}</td>
                   )}
                   <td className="p-3 text-center">{m.date}</td>
+                  <td className="p-3 text-center">
+                    <button
+                      className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                      onClick={() => handleDelete(m._id)}
+                    >
+                      Eliminar
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
